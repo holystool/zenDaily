@@ -10,14 +10,12 @@ interface QuoteDisplayProps {
 
 export default function QuoteDisplay({ currentQuote, setCurrentQuote }: QuoteDisplayProps) {
   useEffect(() => {
-    // 页面加载时随机选择一个金句
     const randomQuote = getRandomQuote();
     setCurrentQuote(randomQuote);
   }, [setCurrentQuote]);
 
-  // 构建百度 AI 搜索链接
   const searchQuery = encodeURIComponent(`${currentQuote.quote_content} 是什么意思？`);
-  const searchUrl = `https://www.baidu.com/s?wd=${searchQuery}`;
+  const searchUrl = `https://sogou.com/web?query=${searchQuery}`;
 
   return (
     <div className="text-center px-4 w-full">
@@ -29,24 +27,25 @@ export default function QuoteDisplay({ currentQuote, setCurrentQuote }: QuoteDis
           style={{
             textShadow: '0 2px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3)',
             lineHeight: '1.6',
-            textWrap: 'balance' // 优化换行排版，避免末行单字
+            textWrap: 'balance' 
           }}
         >
-          {/* 文字与图标容器 */}
-          <span className="inline">
+          {/* 核心改动：使用 relative 容器包裹文字，图标设为绝对定位 */}
+          <span className="relative inline">
             {currentQuote.quote_content}
             
-            {/* AI 搜索按钮：通过 relative 控制偏移 */}
+            {/* 搜索按钮：使用 absolute 确保它不参与父元素的居中宽度计算 */}
             <a 
               href={searchUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative inline-block ml-1 opacity-70 active:opacity-100 transition-opacity"
-              style={{ 
-                top: '-0.6em',  // 核心调整参数：负值越大，图标越靠上
-                left: '0.1em'   // 稍微往右偏一点点，避免紧贴标点
-              }}
+              className="absolute opacity-70 active:opacity-100 transition-opacity p-1"
               title="AI 释义"
+              style={{ 
+                top: '-0.6em',    // 垂直微调，使其在右上角
+                right: '-1.2em',  // 核心参数：向右偏移，使其悬浮在文字范围之外
+                width: '1em'      // 固定宽度
+              }}
             >
               <i className="fas fa-search text-[10px] sm:text-[12px]"></i>
             </a>
