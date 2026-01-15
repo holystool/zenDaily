@@ -30,21 +30,27 @@ export default function QuoteDisplay({ currentQuote, setCurrentQuote }: QuoteDis
             textWrap: 'balance' 
           }}
         >
-          {/* 核心改动：使用 relative 容器包裹文字，图标设为绝对定位 */}
           <span className="relative inline">
             {currentQuote.quote_content}
             
-            {/* 搜索按钮：使用 absolute 确保它不参与父元素的居中宽度计算 */}
+            {/* 核心修改：PWA 兼容性跳转 */}
             <a 
               href={searchUrl}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer external"
               className="absolute opacity-70 active:opacity-100 transition-opacity p-1"
               title="AI 释义"
               style={{ 
-                top: '-0.6em',    // 垂直微调，使其在右上角
-                right: '-1.2em',  // 核心参数：向右偏移，使其悬浮在文字范围之外
-                width: '1em'      // 固定宽度
+                top: '-0.6em',    
+                right: '-1.2em',  
+                width: '1em'      
+              }}
+              onClick={(e) => {
+                // 如果是 PWA 模式，强制调用浏览器打开
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                  e.preventDefault();
+                  window.open(searchUrl, '_blank');
+                }
               }}
             >
               <i className="fas fa-search text-[10px] sm:text-[12px]"></i>

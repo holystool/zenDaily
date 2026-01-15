@@ -59,7 +59,16 @@ export default function Home() {
 
         {/* 底部占位 */}
         <div className="flex-shrink-0 h-24" />
-        
+
+        {/* 核心修改：底部中央 Logo */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-80 pointer-events-none select-none z-0">
+          <img 
+            src="/logo-white.png" 
+            alt="Logo" 
+            className="w-8 h-8 md:w-10 md:h-10 object-contain"
+          />
+        </div>
+
         {/* 5. 极简菜单 */}
         <SimplifiedMenu setCurrentBackground={setCurrentBackground} />
       </div>
