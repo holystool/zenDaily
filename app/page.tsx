@@ -64,7 +64,7 @@ export default function Home() {
         </div>
 
         {/* 中央格言容器 */}
-        <div className="flex-1 flex flex-col justify-center items-center px-8 max-w-5xl mx-auto w-full text-center relative">
+        <div className="flex-1 flex flex-col justify-center items-center px-6 max-w-5xl mx-auto w-full text-center relative">
           <div className="w-full min-h-[300px] flex items-center justify-center pb-24">
             <QuoteDisplay 
               currentQuote={currentQuote}
@@ -73,18 +73,27 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 5. 底部装饰 Logo - 呼吸显隐效果 + 搜索跳转功能 */}
+        {/* 5. 底部装饰 Logo - 修复 PWA 跳转外部浏览器 */}
         <a 
           href={searchUrl}
           target="_blank"
           rel="noopener noreferrer external"
-          className="fixed bottom-7 left-1/2 animate-breath z-20 cursor-pointer select-none transition-all hover:opacity-100"
+          className="fixed bottom-6 left-1/2 animate-breath z-20 cursor-pointer select-none transition-all hover:opacity-100"
           title="点击查看释义"
           onClick={(e) => {
-            // PWA 模式下强制唤起浏览器新窗口
-            if (window.matchMedia('(display-mode: standalone)').matches) {
+            // 检测是否在 PWA (Standalone) 模式下
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+            
+            if (isStandalone) {
               e.preventDefault();
-              window.open(searchUrl, '_blank');
+              // 使用动态创建隐藏 A 标签的方法强制唤起外部浏览器
+              const a = document.createElement('a');
+              a.href = searchUrl;
+              a.target = '_blank';
+              a.rel = 'noopener noreferrer';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
             }
           }}
         >
