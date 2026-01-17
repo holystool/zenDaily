@@ -20,10 +20,17 @@ export default function SimplifiedMenu({ setCurrentBackground, onRefreshQuote }:
   const chimeAudio = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    envAudio.current = new Audio('/hj.mp3');
+    // 1. 修改为 .opus 文件路径
+    // Opus 是流式高效格式，加载速度远快于 MP3
+    envAudio.current = new Audio('/hj.opus');
     envAudio.current.loop = true;
+    
+    // 性能优化：设置 preload 为 'none'，直到用户点击开关才开始下载音频流
+    envAudio.current.preload = 'none'; 
+
     chimeAudio.current = new Audio('/zs.mp3');
 
+    // 载入本地配置
     setAmbience(localStorage.getItem('setting-ambience') === 'true');
     setHourlyChime(localStorage.getItem('setting-chime') === 'true');
     setAutoRefresh(localStorage.getItem('setting-auto-refresh') === 'true');
@@ -41,14 +48,21 @@ export default function SimplifiedMenu({ setCurrentBackground, onRefreshQuote }:
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // 环境音播放逻辑
   useEffect(() => {
     if (ambience) {
-      envAudio.current?.play().catch(() => {});
+      // 检查音频是否已经加载，并播放
+      envAudio.current?.play().catch((err) => {
+        console.warn("音频播放被拦截，通常需要用户交互后触发:", err);
+      });
     } else {
       envAudio.current?.pause();
+      // 如果音频很长，暂停时可以考虑重置时间点或维持现状
     }
     localStorage.setItem('setting-ambience', String(ambience));
   }, [ambience]);
+
+  // ... 保持 toggleSogou, toggleGoogle, handleChimeToggle 逻辑不变 ...
 
   const toggleSogou = (val: boolean) => {
     setUseSogou(val);
@@ -74,12 +88,13 @@ export default function SimplifiedMenu({ setCurrentBackground, onRefreshQuote }:
     setHourlyChime(val);
     localStorage.setItem('setting-chime', String(val));
     if (val) {
-      chimeAudio.current?.play().catch(() => {}); // 开启即响铃
+      chimeAudio.current?.play().catch(() => {});
     }
   };
 
   return (
     <div ref={menuRef} className="fixed top-6 left-6 z-[60]">
+      {/* UI 部分保持不变 */}
       <button 
         onClick={() => setIsOpen(!isOpen)} 
         className="w-10 h-10 flex items-center justify-center bg-black/30 backdrop-blur-md rounded-full border border-white/10 transition-all hover:bg-black/50"
@@ -103,7 +118,6 @@ export default function SimplifiedMenu({ setCurrentBackground, onRefreshQuote }:
               <ToggleItem label="谷歌搜索" checked={useGoogle} onChange={toggleGoogle} />
             </div>
 
-            {/* 仅保留换一条格言功能 */}
             <div className="pt-4 border-t border-white/10">
               <button 
                 onClick={() => { onRefreshQuote?.(); setIsOpen(false); }}
