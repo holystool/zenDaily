@@ -70,8 +70,8 @@ export default function Home() {
           100% { opacity: 0.2; -webkit-transform: translate(-50%, 0) scale(1); }
         }
         .animate-breath { 
-          animation: lotus-breath 3s ease-in-out infinite !important;
-          -webkit-animation: lotus-breath 3s ease-in-out infinite !important;
+          animation: lotus-breath 5s ease-in-out infinite !important;
+          -webkit-animation: lotus-breath 5s ease-in-out infinite !important;
         }
       `}</style>
 

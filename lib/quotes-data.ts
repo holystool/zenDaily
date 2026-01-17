@@ -7,8 +7,6 @@ export interface Quote {
 // 修复后的金句数据
 export const quotesData: Quote[] = [
   { "quote_content": "揭谛揭谛，波罗揭谛，波罗僧揭谛，菩提萨婆诃。", "quote_source": "《般若波罗蜜多心经》" },
-  { "quote_content": "无无明，亦无无明尽。", "quote_source": "《般若波罗蜜多心经》" },
-  { "quote_content": "以无所得故，菩提萨埵。", "quote_source": "《般若波罗蜜多心经》" },
   { "quote_content": "若菩萨有我相、人相、众生相、寿者相，即非菩萨。", "quote_source": "《金刚经》" },
   { "quote_content": "如来所说法，皆不可取，不可说。", "quote_source": "《金刚经》" },
   { "quote_content": "法尚应舍，何况非法。", "quote_source": "《金刚经》" },
